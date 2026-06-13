@@ -38,4 +38,8 @@ jobs:
             - eMule Security List
 
             Usage in PBH: Settings → Rules → Add Rule → paste raw URL of wael.txt
+            
+            ```
+            https://github.com/ReRokutosei/fork-weal-blocklist/releases/latest/download/wael.txt
+            ```
           files: wael.txt
