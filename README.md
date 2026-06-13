@@ -1,71 +1,37 @@
-# **🛡️ Wael's Best P2P Blocklist (Super-List)**
+# PBH Blocklist Builder
 
-Finding a complete blocklist for torrenting can be a massive pain. You’re never quite sure which one to pick. There are a ton of lists out there, but they’re all for different purposes. No single list gives you complete protection: one might block spammers, another might shield you from government snooping, but almost none of them combine everything you actually need.
+每周自动构建 P2P IP 封禁规则，输出 **CIDR 格式**，供 [PeerBanHelper](https://github.com/PBH-BTN/PeerBanHelper) 订阅使用。
 
-**This is my Safe List.** I built this because other "massive" blacklists block too many good IPs—including legitimate seedboxes—which kills your download speeds and ratio.
+## 用法
 
-My list focuses on what matters: **Banning bad peers and known copyright-trolling IPs, while keeping the "good" P2P traffic flowing.**
+在 PBH WebUI 中：
 
-**"Keep sharing, stay safe, and have fun."** — Wael Isa
+1. **设置 → 规则 → 添加规则**
+2. **URL** 填入本仓库 Release 中 `wael.txt` 的 raw 链接
+3. 点击 **立即更新**
 
-## **✨ Features**
+PBH 会自动下载并解析 CIDR 规则，无需本地部署脚本。
 
-*   **Industrial Grade Aggregation:** Combines high-quality sources (Naunter, iBlocklist, and more) into one master file.
-*   **Precision Filtering:** Removes redundant IP ranges that cause "False Positives" on seedboxes.
-*   **Transmission Ready:** Automatically detects your Transmission directory and updates the blocklist.
-*   **Clean & Optimized:** Advanced deduplication engine keeps the list lean and fast.
-*   **Auto-Dependency:** If you're missing zip or curl, the script can install them for you.
+## 数据源
 
-## **🚀 Quick Start**
+- [Naunter BT BlockLists](https://github.com/Naunter/BT_BlockLists)
+- [mxdpeep p2p-blocklist-creator](https://github.com/mxdpeep/p2p-blocklist-creator)
+- [eMule Security IP Filter](http://upd.emule-security.org/ipfilter.zip)
 
-### **1. Clone the repository**
+## 自动化
 
-```bash
-git clone https://github.com/waelisa/Best-blocklist.git && cd Best-blocklist
-```
-### **2. Make the script executable**
-```bash
-chmod +x Blocklist-builder.sh
-```
-### **3. Run the Builder**
+GitHub Actions 每周一 00:00 UTC 自动执行：
 
-You can run it simply to build the list, or use the --install flag to ensure your system has all the required tools.
+1. 下载三个上游源
+2. 合并去重 → 聚合为 CIDR 条目
+3. 发布 Release
 
-# Standard build
-```bash
-./Blocklist-builder.sh 
-```
-# Build + Install missing dependencies (zip, curl, etc.) 
-```bash
-sudo ./Blocklist-builder.sh --install
-```
-## **⚙️ Advanced Usage**
+也可手动触发 `workflow_dispatch`。
 
-Plaintext
+## Credits
 
-Options:
+基于 [**Best-blocklist**](https://github.com/waelisa/Best-blocklist) by **Wael Isa** ([wael.name](https://www.wael.name))。
 
--h, --help Show help message
+## License
 
--c, --clean Clean work directory and exit
-
--v, --version Show version information
-
--p, --paths Show detected Transmission paths
-
---no-install Disable auto-dependency installation
-
-
-## **🤝 Contributing**
-
-I built this for the community. If you have better sources, find a bad IP that should be blocked, or have ideas to make the script faster, please **open an issue** or **submit a pull request**.
-
-**Website:** [www.wael.name](https://www.wael.name)
-
-**Project Link:** [https://github.com/waelisa/Best-blocklist](https://github.com/waelisa/Best-blocklist)
-
-### **⚠️ Disclaimer**
-
-_This blocklist is a layer of protection, not a magic bullet. For 100% privacy, always use a VPN or a Seedbox alongside this list._
-
-[Donate link – PayPal](https://www.paypal.me/WaelIsa)
+MIT — 见 [LICENSE](LICENSE)。

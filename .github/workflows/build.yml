@@ -1,0 +1,41 @@
+name: Weekly PBH Blocklist Build
+
+on:
+  schedule:
+    - cron: "0 0 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: sudo apt-get update && sudo apt-get install -y curl gzip awk python3
+
+      - name: Run PBH blocklist builder
+        run: chmod +x pbh-blocklist-builder.sh && ./pbh-blocklist-builder.sh
+
+      - name: Determine release tag
+        id: tag
+        run: echo "tag=weekly-$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.tag.outputs.tag }}
+          name: Weekly PBH Blocklist ${{ steps.tag.outputs.tag }}
+          body: |
+            Automated weekly build of CIDR blocklist for PeerBanHelper.
+
+            Sources:
+            - Naunter Mega List
+            - mxdpeep Comprehensive List
+            - eMule Security List
+
+            Usage in PBH: Settings → Rules → Add Rule → paste raw URL of wael.txt
+          files: wael.txt
