@@ -15,7 +15,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Install dependencies
-        run: sudo apt-get update && sudo apt-get install -y curl gzip awk python3
+        run: sudo apt-get update && sudo apt-get install -y curl gzip gawk python3
 
       - name: Run PBH blocklist builder
         run: chmod +x pbh-blocklist-builder.sh && ./pbh-blocklist-builder.sh
