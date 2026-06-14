@@ -1,6 +1,6 @@
 #!/bin/bash
 # PBH P2P Blocklist Builder — 输出 CIDR 格式，供 PeerBanHelper 订阅
-# Based on Wael Isa's Blocklist-builder.sh v1.1.4
+# 基于 Wael Isa 的 Blocklist-builder.sh v1.1.4
 
 OUTPUT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 WORK_DIR="${OUTPUT_DIR}/blocklist-work"
@@ -15,7 +15,7 @@ declare -A SOURCES=(
 )
 
 # ============================================================================
-# 颜色 / 工具
+# 颜色与工具函数
 # ============================================================================
 if [[ -t 1 ]]; then
     RED='\033[1;31m'; GREEN='\033[1;32m'; YELLOW='\033[1;33m'
@@ -23,14 +23,16 @@ if [[ -t 1 ]]; then
 else
     RED=''; GREEN=''; YELLOW=''; BLUE=''; PURPLE=''; CYAN=''; NC=''
 fi
-log()  { echo -e "${BLUE}[INFO]${NC} $1" >&2; }
-ok()   { echo -e "${GREEN}[OK]${NC} $1" >&2; }
+log() { echo -e "${BLUE}[INFO]${NC} $1" >&2; }
+ok() { echo -e "${GREEN}[OK]${NC} $1" >&2; }
 warn() { echo -e "${YELLOW}[WARN]${NC} $1" >&2; }
-err()  { echo -e "${RED}[ERR]${NC} $1" >&2; }
-format_number() { echo "$1" | sed ':a;s/\B[0-9]\{3\}\>/,&/;ta'; }
+err() { echo -e "${RED}[ERR]${NC} $1" >&2; }
+format_number() {
+    echo "$1" | sed ':a;s/\B[0-9]\{3\}\>/,&/;ta'
+}
 
 # ============================================================================
-# 依赖
+# 依赖检查
 # ============================================================================
 check_deps() {
     local missing=()
@@ -38,7 +40,7 @@ check_deps() {
     command -v gunzip &>/dev/null || missing+=("gzip")
     command -v awk &>/dev/null || missing+=("awk")
     command -v python3 &>/dev/null || missing+=("python3")
-    if [ ${#missing[@]} -gt 0 ]; then
+    if [ "${#missing[@]}" -gt 0 ]; then
         err "Missing: ${missing[*]}"
         exit 1
     fi
@@ -89,7 +91,7 @@ download_sources() {
 }
 
 # ============================================================================
-# 处理 → 合并去重 → CIDR
+# IP 范围合并去重
 # ============================================================================
 clean_and_merge() {
     local input="$1" output="$2" stats="$3"
@@ -153,7 +155,7 @@ EOF
 }
 
 # ============================================================================
-# 构建
+# 构建流程
 # ============================================================================
 build() {
     local start=$(date +%s)
@@ -192,12 +194,12 @@ EOF
 }
 
 # ============================================================================
-# 入口
+# 入口函数
 # ============================================================================
 case "${1:-}" in
     -h|--help)
-        echo "Usage: $0"
-        echo "Builds wael.txt (CIDR format) for PeerBanHelper subscription"
+        echo "用法: $0"
+        echo "构建 wael.txt（CIDR 格式），供 PeerBanHelper 订阅使用"
         exit 0 ;;
     -c|--clean)
         rm -rf "$WORK_DIR"/*
